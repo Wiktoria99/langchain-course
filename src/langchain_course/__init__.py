@@ -1,35 +1,33 @@
 import os
 from dotenv import load_dotenv
 from langchain_core.prompts import PromptTemplate
-from langchain_openai import ChatOpenAI
+from langchain_ollama import ChatOllama
 
 load_dotenv()
 
 
 def main() -> None:
-    print("Hello from langchain-course!")
+    print("Let's see summary made by Ollama gemma3:270m")
 
     information = """
-    Maria Salomea Skłodowska-Curie[a] (ur. 7 listopada 1867 w Warszawie, zm. 4 lipca 1934 w Passy) – polsko-francuska uczona w dziedzinach fizyki doświadczalnej i chemii fizycznej, podwójna noblistka – laureatka Nagrody Nobla z fizyki (1903)[1] i chemii (1911)[2].
+Maria Salomea Skłodowska Curie[a] (née Skłodowska; 7 November 1867 – 4 July 1934),[1] better known as Marie Curie,[b] was a Polish and naturalised-French physicist and chemist. She shared the 1903 Nobel Prize in Physics with her husband, Pierre Curie, "for their joint researches on the radioactivity phenomena discovered by Professor Henri Becquerel".[3] She won the 1911 Nobel Prize in Chemistry "[for] the discovery of the elements radium and polonium, by the isolation of radium and the study of the nature and compounds of this remarkable element".[4]
 
-W 1891 r. wyjechała do Paryża, by podjąć studia na Sorbonie, gdzie następnie pracowała naukowo. Była prekursorką nowej gałęzi chemii – radiochemii. Do jej dokonań należą: rozwinięcie teorii promieniotwórczości, technik rozdzielania izotopów promieniotwórczych oraz odkrycie dwóch nowych pierwiastków – radu i polonu. Z jej inicjatywy prowadzono także badania nad leczeniem raka za pomocą promieniotwórczości.
+Curie was the first woman to win a Nobel Prize, the first person to win a Nobel Prize twice and the only person to win a Nobel Prize in two different scientific fields. She and Pierre were the first married couple to win the Nobel Prize, launching the Curie family legacy of five Nobel Prizes.[5] She was, in 1906, the first woman to become a professor at the University of Paris.
 
-Nagrodą Nobla została wyróżniona po raz pierwszy w 1903 r. – z fizyki, wraz z mężem Pierre’em Curie i z Henrim Becquerelem, za badania nad odkrytym przez Becquerela zjawiskiem promieniotwórczości. Po raz drugi została nagrodzona w 1911 r. – z chemii za odkrycie polonu i radu, wydzielenie czystego radu i badanie właściwości chemicznych pierwiastków promieniotwórczych. Należy do grona pięciu osób, które otrzymały więcej niż jedną Nagrodę Nobla. Wśród nich jest jedną z dwóch, które otrzymały nagrody w różnych dyscyplinach, a także jedynym uczonym uhonorowanym w dwóch różnych naukach przyrodniczych[3][b]. Mimo polskiej narodowości i sentymentów do kraju nigdy nie otrzymała polskiego obywatelstwa.
-
-Jest pierwszą kobietą, która spoczęła w paryskim Panteonie w dowód uznania zasług naukowych. Z mężem Pierre’em Curie miała dwie córki: Irène Joliot-Curie i Ève Curie.
+Curie was born in Warsaw, Russian Empire, where she studied at the clandestine Flying University and began her practical scientific training. In 1891, Curie followed her elder sister Bronisława to study in Paris, where she earned her higher degrees and conducted her subsequent scientific work. In 1895, Curie married Pierre, with whom she conducted pioneering research on radioactivity—a term she coined.[6][7] Pierre died in 1906 in a Paris street accident.
     """
 
     summary_template = """
     givent the infroamtion {information} about a person I want you to create:
     1. A short summary
-    2. Two interesting facts about them
+    2. Only Two interesting facts about them
     """
 
     summary_prompt_template = PromptTemplate(
         input_variables=["information"], template=summary_template
     )
 
-    llm = ChatOpenAI(temperature=0, model="gpt-5")
+    llm = ChatOllama(temperature=0, model="gemma3:270m")
     chain = summary_prompt_template | llm
 
     response = chain.invoke(input={"information": information})
